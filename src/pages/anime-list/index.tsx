@@ -1,5 +1,6 @@
+import * as S from "./styled";
 const AnimeList = () => {
-  return <>Anime List Component</>;
+  return <S.Wrapper>Anime List Component</S.Wrapper>;
 };
 
 export default AnimeList;
