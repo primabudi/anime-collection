@@ -5,12 +5,7 @@ import React, {
   useEffect,
   useReducer,
 } from "react";
-import { ApolloClient } from "@apollo/client";
 import { Anime } from "../types/anime";
-import {
-  GET_MULTIPLE_ANIME_DETAILS,
-  MultipleAnimeListQuery,
-} from "../graphql/getMultipleAnimeDetail";
 
 interface CollectionLocalStorage {
   name: string;
@@ -19,7 +14,7 @@ interface CollectionLocalStorage {
 
 interface CollectionReducer {
   name: string;
-  animeList: Anime[];
+  animeIds: number[];
 }
 
 const ADD_ANIME = "ADD_ANIME";
@@ -66,31 +61,10 @@ const useAnimeCollection = () => {
 export const useAnimeCollectionContext = () =>
   useContext(AnimeCollectionContext);
 
-const fetchMultipleAnimeDetails = async (
-  apolloClient: ApolloClient<any>,
-  animeIds: number[],
-): Promise<Anime[] | null> => {
-  try {
-    const { data } = await apolloClient.query<MultipleAnimeListQuery>({
-      query: GET_MULTIPLE_ANIME_DETAILS,
-      variables: { ids: animeIds },
-    });
-
-    if (data && data.Page) {
-      return data.Page.media;
-    }
-  } catch (error) {
-    console.error("Error fetching anime details:", error);
-  }
-
-  return null;
-};
-
 // Provide the context to the app's top-level component
 const AnimeCollectionProvider: React.FC<{
-  apolloClient: ApolloClient<any>;
   children: ReactNode;
-}> = ({ apolloClient, children }) => {
+}> = ({ children }) => {
   const { animeCollection, addAnime, setInitialCollection } =
     useAnimeCollection();
 
@@ -102,19 +76,9 @@ const AnimeCollectionProvider: React.FC<{
         JSON.parse(storedCollection);
       Promise.all(
         parsedCollection.map(async (collection) => {
-          const animeDetails = await fetchMultipleAnimeDetails(
-            apolloClient,
-            collection.animeIds,
-          );
-
-          // Filter out any null values (failed API requests)
-          const filteredAnimeDetails = animeDetails?.filter(
-            (details) => details !== null,
-          ) as Anime[];
-
           const newCollection: CollectionReducer = {
             name: collection.name,
-            animeList: filteredAnimeDetails,
+            animeIds: collection.animeIds,
           };
           return newCollection;
         }),

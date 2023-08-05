@@ -5,6 +5,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import AnimeDetail from "./pages/anime-detail";
 import AnimeCollectionProvider from "./context/AnimeCollectionProvider";
 import CollectionList from "./pages/collection-list";
+import CollectionDetail from "./pages/collection-detail";
 
 const client = new ApolloClient({
   uri: "https://graphql.anilist.co",
@@ -13,7 +14,7 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <AnimeCollectionProvider apolloClient={client}>
+      <AnimeCollectionProvider>
         <h1>Anime Database</h1>
         <BrowserRouter>
           <Switch>
@@ -25,6 +26,9 @@ function App() {
             </Route>
             <Route path="/collection-list">
               <CollectionList />
+            </Route>
+            <Route path="/collection-detail/:collectionName">
+              <CollectionDetail />
             </Route>
           </Switch>
         </BrowserRouter>
