@@ -8,7 +8,6 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 function App() {
-  console.log("asdasd");
   return (
     <ApolloProvider client={client}>
       <BrowserRouter>
