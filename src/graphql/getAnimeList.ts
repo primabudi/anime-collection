@@ -8,8 +8,8 @@ export type AnimeListQuery = {
   };
 };
 export const GET_ANIME_LIST = gql`
-  query {
-    Page(page: 1, perPage: 10) {
+  query GetAnimeList($id: Int!) {
+    Page(page: $id, perPage: 10) {
       pageInfo {
         total
         perPage

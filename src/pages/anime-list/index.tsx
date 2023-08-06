@@ -1,13 +1,16 @@
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import * as S from "./styled";
 import { useQuery } from "@apollo/client";
 import { AnimeListQuery, GET_ANIME_LIST } from "../../graphql/getAnimeList";
-import { useHistory } from "react-router-dom";
+
 const AnimeList = () => {
+  const [page, setPage] = useState(1);
   const {
     loading,
     error,
     data: animeList,
-  } = useQuery<AnimeListQuery>(GET_ANIME_LIST);
+  } = useQuery<AnimeListQuery>(GET_ANIME_LIST, { variables: { id: page } });
   const history = useHistory();
 
   if (loading) return <p>Loading...</p>;
@@ -27,6 +30,10 @@ const AnimeList = () => {
             </h3>
           );
         })}
+        {page > 1 && (
+          <button onClick={() => setPage(page - 1)}>Page {page - 1}</button>
+        )}
+        <button onClick={() => setPage(page + 1)}>Page {page + 1}</button>
       </S.Wrapper>
     );
   }

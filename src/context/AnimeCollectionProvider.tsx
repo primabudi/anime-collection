@@ -5,7 +5,6 @@ import React, {
   useEffect,
   useReducer,
 } from "react";
-import { Anime } from "../types/anime";
 
 interface CollectionLocalStorage {
   name: string;
@@ -34,28 +33,53 @@ const animeCollectionReducer = (
 // Create the anime collection context
 const AnimeCollectionContext = createContext<{
   animeCollection: CollectionReducer[];
-  addAnime: (collectionId: number, anime: Anime) => void;
+  addAnime: (collectionName: string, animeIds: number[]) => void;
+  createNewCollection: (collectionName: string, animeIds: number[]) => void;
   setInitialCollection: (collection: CollectionReducer[]) => void;
 }>({
   animeCollection: [],
   addAnime: () => {},
+  createNewCollection: () => {},
   setInitialCollection: () => {},
 });
 
 const useAnimeCollection = () => {
   const [animeCollection, dispatch] = useReducer(animeCollectionReducer, []);
 
-  // TODO: Implement this!
-  const addAnime = (collectionId: number, anime: Anime) => {
-    console.log(collectionId, anime);
-    dispatch({ type: ADD_ANIME, payload: [] });
+  const addAnime = (collectionName: string, animeIds: number[]) => {
+    const newCollection: CollectionReducer[] = animeCollection.map((col) => {
+      if (col.name !== collectionName) {
+        return col;
+      }
+      const newAnimeIds = [...col.animeIds, ...animeIds];
+      return {
+        ...col,
+        animeIds: newAnimeIds,
+      };
+    });
+    localStorage.setItem("animeCollection", JSON.stringify(newCollection));
+    dispatch({ type: ADD_ANIME, payload: newCollection });
+  };
+
+  const createNewCollection = (collectionName: string, animeIds: number[]) => {
+    const newCollection: CollectionReducer[] = [
+      ...animeCollection,
+      { name: collectionName, animeIds: animeIds },
+    ];
+    localStorage.setItem("animeCollection", JSON.stringify(newCollection));
+    dispatch({ type: ADD_ANIME, payload: newCollection });
   };
 
   function setInitialCollection(collection: CollectionReducer[]) {
     dispatch({ type: ADD_ANIME, payload: collection });
   }
 
-  return { animeCollection, addAnime, setInitialCollection };
+  return {
+    animeCollection,
+    addAnime,
+    createNewCollection,
+    setInitialCollection,
+  };
 };
 
 export const useAnimeCollectionContext = () =>
@@ -65,8 +89,12 @@ export const useAnimeCollectionContext = () =>
 const AnimeCollectionProvider: React.FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const { animeCollection, addAnime, setInitialCollection } =
-    useAnimeCollection();
+  const {
+    animeCollection,
+    addAnime,
+    createNewCollection,
+    setInitialCollection,
+  } = useAnimeCollection();
 
   // Load the anime collection from local storage on mount
   useEffect(() => {
@@ -88,14 +116,14 @@ const AnimeCollectionProvider: React.FC<{
     }
   }, []);
 
-  // // Save the anime collection to local storage whenever it changes
-  // useEffect(() => {
-  //   localStorage.setItem("animeCollection", JSON.stringify(animeCollection));
-  // }, [animeCollection]);
-
   return (
     <AnimeCollectionContext.Provider
-      value={{ animeCollection, addAnime, setInitialCollection }}
+      value={{
+        animeCollection,
+        addAnime,
+        createNewCollection,
+        setInitialCollection,
+      }}
     >
       {children}
     </AnimeCollectionContext.Provider>
