@@ -18,14 +18,14 @@ interface CollectionReducer {
   thumbnail: string;
 }
 
-const ADD_ANIME = "ADD_ANIME";
+const SET_ANIME = "SET_ANIME";
 
 const animeCollectionReducer = (
   state: CollectionReducer[],
   action: { type: string; payload: CollectionReducer[] },
 ): CollectionReducer[] => {
   switch (action.type) {
-    case ADD_ANIME:
+    case SET_ANIME:
       return action.payload;
     default:
       return state;
@@ -42,11 +42,13 @@ const AnimeCollectionContext = createContext<{
     thumbnail: string,
   ) => void;
   setInitialCollection: (collection: CollectionReducer[]) => void;
+  deleteCollection: (collectionName: string) => void;
 }>({
   animeCollection: [],
   addAnime: () => {},
   createNewCollection: () => {},
   setInitialCollection: () => {},
+  deleteCollection: () => {},
 });
 
 const useAnimeCollection = () => {
@@ -64,7 +66,7 @@ const useAnimeCollection = () => {
       };
     });
     localStorage.setItem("animeCollection", JSON.stringify(newCollection));
-    dispatch({ type: ADD_ANIME, payload: newCollection });
+    dispatch({ type: SET_ANIME, payload: newCollection });
   };
 
   const createNewCollection = (
@@ -77,11 +79,19 @@ const useAnimeCollection = () => {
       { name: collectionName, animeIds: animeIds, thumbnail: thumbnail },
     ];
     localStorage.setItem("animeCollection", JSON.stringify(newCollection));
-    dispatch({ type: ADD_ANIME, payload: newCollection });
+    dispatch({ type: SET_ANIME, payload: newCollection });
   };
 
   function setInitialCollection(collection: CollectionReducer[]) {
-    dispatch({ type: ADD_ANIME, payload: collection });
+    dispatch({ type: SET_ANIME, payload: collection });
+  }
+
+  function deleteCollection(collectionName: string) {
+    const newCollection: CollectionReducer[] = animeCollection.filter((col) => {
+      return col.name !== collectionName;
+    });
+    localStorage.setItem("animeCollection", JSON.stringify(newCollection));
+    dispatch({ type: SET_ANIME, payload: newCollection });
   }
 
   return {
@@ -89,6 +99,7 @@ const useAnimeCollection = () => {
     addAnime,
     createNewCollection,
     setInitialCollection,
+    deleteCollection,
   };
 };
 
@@ -104,6 +115,7 @@ const AnimeCollectionProvider: React.FC<{
     addAnime,
     createNewCollection,
     setInitialCollection,
+    deleteCollection,
   } = useAnimeCollection();
 
   // Load the anime collection from local storage on mount
@@ -134,6 +146,7 @@ const AnimeCollectionProvider: React.FC<{
         addAnime,
         createNewCollection,
         setInitialCollection,
+        deleteCollection,
       }}
     >
       {children}

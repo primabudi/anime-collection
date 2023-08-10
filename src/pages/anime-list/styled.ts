@@ -8,9 +8,12 @@ const Wrapper = styled.div`
 `;
 
 const ContainerGrid = styled(Unstable_Grid2)`
+  background-color: lightblue;
   align-items: center;
   display: flex;
   width: 100%;
+  padding: 16px 0;
+  border-radius: 16px;
 `;
 
 const SubGrid = styled(Unstable_Grid2)`

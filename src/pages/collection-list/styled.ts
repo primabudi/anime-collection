@@ -1,10 +1,21 @@
 import styled from "@emotion/styled";
 import { Card, Unstable_Grid2 } from "@mui/material";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const Wrapper = styled.div`
-  max-width: 1000px;
-  padding: 0 16px;
+  background-color: lightblue;
+  max-width: 85vw;
+  padding: 16px;
   margin: 0 auto;
+  border-radius: 16px;
+
+  h2 {
+    text-align: center;
+  }
+
+  .add-new-collection {
+    margin: 0 auto 16px;
+  }
 `;
 
 const ContainerGrid = styled(Unstable_Grid2)`
@@ -17,7 +28,8 @@ const SubGrid = styled(Unstable_Grid2)`
   justify-content: center;
 `;
 const StyledCard = styled(Card)`
-  width: 50%;
+  position: relative;
+  width: 150px;
   height: 220px;
   margin: 0 auto;
   display: flex;
@@ -31,7 +43,7 @@ const StyledCard = styled(Card)`
     width: 100px;
     height: 138px;
     margin: 0 auto;
-    padding: 8px;
+    padding: 8px 24px 8px 8px;
   }
 
   div {
@@ -40,4 +52,10 @@ const StyledCard = styled(Card)`
   }
 `;
 
-export { Wrapper, ContainerGrid, SubGrid, StyledCard };
+const StyledCancelIcon = styled(CancelIcon)`
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
+
+export { Wrapper, ContainerGrid, SubGrid, StyledCard, StyledCancelIcon };

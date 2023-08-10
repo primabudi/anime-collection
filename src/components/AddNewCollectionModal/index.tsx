@@ -91,17 +91,18 @@ const AddNewCollectionModal = ({
               onChange={formik.handleChange}
             >
               <MenuItem value="-">Create new collection</MenuItem>
-              {animeCollection.map((collection) => {
-                return (
-                  <MenuItem
-                    key={collection.name}
-                    value={collection.name}
-                    disabled={collection.animeIds.includes(anime?.id || -1)}
-                  >
-                    {collection.name}
-                  </MenuItem>
-                );
-              })}
+              {anime &&
+                animeCollection.map((collection) => {
+                  return (
+                    <MenuItem
+                      key={collection.name}
+                      value={collection.name}
+                      disabled={collection.animeIds.includes(anime?.id || -1)}
+                    >
+                      {collection.name}
+                    </MenuItem>
+                  );
+                })}
             </Select>
             {formik.values.name === "-" && (
               <TextField
