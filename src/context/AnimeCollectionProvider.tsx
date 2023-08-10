@@ -43,12 +43,18 @@ const AnimeCollectionContext = createContext<{
   ) => void;
   setInitialCollection: (collection: CollectionReducer[]) => void;
   deleteCollection: (collectionName: string) => void;
+  deleteAnime: (
+    collectionName: string,
+    animeIds: number[],
+    thumbnail?: string,
+  ) => void;
 }>({
   animeCollection: [],
   addAnime: () => {},
   createNewCollection: () => {},
   setInitialCollection: () => {},
   deleteCollection: () => {},
+  deleteAnime: () => {},
 });
 
 const useAnimeCollection = () => {
@@ -94,12 +100,33 @@ const useAnimeCollection = () => {
     dispatch({ type: SET_ANIME, payload: newCollection });
   }
 
+  function deleteAnime(
+    collectionName: string,
+    animeIds: number[],
+    thumbnail?: string,
+  ) {
+    const newCollection: CollectionReducer[] = animeCollection.map((col) => {
+      if (col.name !== collectionName) {
+        return col;
+      }
+      const newAnimeIds = col.animeIds.filter((id) => id !== animeIds[0]);
+      return {
+        ...col,
+        animeIds: newAnimeIds,
+        thumbnail: thumbnail ? thumbnail : col.thumbnail,
+      };
+    });
+    localStorage.setItem("animeCollection", JSON.stringify(newCollection));
+    dispatch({ type: SET_ANIME, payload: newCollection });
+  }
+
   return {
     animeCollection,
     addAnime,
     createNewCollection,
     setInitialCollection,
     deleteCollection,
+    deleteAnime,
   };
 };
 
@@ -116,6 +143,7 @@ const AnimeCollectionProvider: React.FC<{
     createNewCollection,
     setInitialCollection,
     deleteCollection,
+    deleteAnime,
   } = useAnimeCollection();
 
   // Load the anime collection from local storage on mount
@@ -147,6 +175,7 @@ const AnimeCollectionProvider: React.FC<{
         createNewCollection,
         setInitialCollection,
         deleteCollection,
+        deleteAnime,
       }}
     >
       {children}

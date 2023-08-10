@@ -25,7 +25,6 @@ const CollectionList = () => {
     collectionToDeleted: string,
   ) {
     e.stopPropagation();
-    console.log(collectionToDeleted);
     setCollectionToDelete(collectionToDeleted);
   }
 

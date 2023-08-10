@@ -4,22 +4,32 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useAnimeCollectionContext } from "../../context/AnimeCollectionProvider";
+import { Anime } from "../../types/anime";
 
 interface DeleteCollectionModalProps {
   onClose: () => void;
   collectionName: string;
+  anime?: Anime;
+  newThumbnail?: string;
 }
 const DeleteCollectionModal = ({
   onClose,
   collectionName,
+  anime,
+  newThumbnail,
 }: DeleteCollectionModalProps) => {
-  const { deleteCollection } = useAnimeCollectionContext();
+  const { deleteCollection, deleteAnime } = useAnimeCollectionContext();
   const handleClose = () => {
     onClose();
   };
 
   const handleDelete = () => {
-    deleteCollection(collectionName);
+    if (anime) {
+      deleteAnime(collectionName, [anime.id], newThumbnail);
+    } else {
+      deleteCollection(collectionName);
+    }
+
     onClose();
   };
 
@@ -31,7 +41,9 @@ const DeleteCollectionModal = ({
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        {`Are you sure to delete ${collectionName}?`}
+        {`Are you sure to delete ${
+          anime ? anime.title.english : collectionName
+        }?`}
       </DialogTitle>
       <DialogActions>
         <Button onClick={handleClose}>No</Button>
