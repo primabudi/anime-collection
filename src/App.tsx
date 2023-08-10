@@ -16,7 +16,7 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <AnimeCollectionProvider>
-        <BrowserRouter>
+        <BrowserRouter basename="/anime-collection">
           <Header />
           <Switch>
             <Route exact path="/">
