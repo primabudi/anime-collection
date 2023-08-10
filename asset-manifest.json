@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/anime-collection/static/css/main.09557427.css",
+    "main.js": "/anime-collection/static/js/main.1e04661f.js",
+    "static/js/787.95a9e670.chunk.js": "/anime-collection/static/js/787.95a9e670.chunk.js",
+    "index.html": "/anime-collection/index.html",
+    "main.09557427.css.map": "/anime-collection/static/css/main.09557427.css.map",
+    "main.1e04661f.js.map": "/anime-collection/static/js/main.1e04661f.js.map",
+    "787.95a9e670.chunk.js.map": "/anime-collection/static/js/787.95a9e670.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.09557427.css",
+    "static/js/main.1e04661f.js"
+  ]
+}
