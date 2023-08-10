@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import * as S from "./styled";
 
 const Header = () => {
   const history = useHistory();
@@ -12,10 +13,15 @@ const Header = () => {
   }
 
   return (
-    <>
-      <h1 onClick={() => onClickHeader()}>Anime Database</h1>
-      <button onClick={() => onClickMyCollection()}>My Collection</button>
-    </>
+    <S.Wrapper>
+      <S.Title onClick={() => onClickHeader()}>Anime Database</S.Title>
+      <S.CollectionButton
+        onClick={() => onClickMyCollection()}
+        variant="contained"
+      >
+        My Collection
+      </S.CollectionButton>
+    </S.Wrapper>
   );
 };
 

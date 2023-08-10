@@ -9,11 +9,13 @@ import React, {
 interface CollectionLocalStorage {
   name: string;
   animeIds: number[];
+  thumbnail: string;
 }
 
 interface CollectionReducer {
   name: string;
   animeIds: number[];
+  thumbnail: string;
 }
 
 const ADD_ANIME = "ADD_ANIME";
@@ -34,7 +36,11 @@ const animeCollectionReducer = (
 const AnimeCollectionContext = createContext<{
   animeCollection: CollectionReducer[];
   addAnime: (collectionName: string, animeIds: number[]) => void;
-  createNewCollection: (collectionName: string, animeIds: number[]) => void;
+  createNewCollection: (
+    collectionName: string,
+    animeIds: number[],
+    thumbnail: string,
+  ) => void;
   setInitialCollection: (collection: CollectionReducer[]) => void;
 }>({
   animeCollection: [],
@@ -61,10 +67,14 @@ const useAnimeCollection = () => {
     dispatch({ type: ADD_ANIME, payload: newCollection });
   };
 
-  const createNewCollection = (collectionName: string, animeIds: number[]) => {
+  const createNewCollection = (
+    collectionName: string,
+    animeIds: number[],
+    thumbnail: string,
+  ) => {
     const newCollection: CollectionReducer[] = [
       ...animeCollection,
-      { name: collectionName, animeIds: animeIds },
+      { name: collectionName, animeIds: animeIds, thumbnail: thumbnail },
     ];
     localStorage.setItem("animeCollection", JSON.stringify(newCollection));
     dispatch({ type: ADD_ANIME, payload: newCollection });
@@ -107,6 +117,7 @@ const AnimeCollectionProvider: React.FC<{
           const newCollection: CollectionReducer = {
             name: collection.name,
             animeIds: collection.animeIds,
+            thumbnail: collection.thumbnail,
           };
           return newCollection;
         }),
